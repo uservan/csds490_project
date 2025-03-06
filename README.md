@@ -1,8 +1,6 @@
-# csds490_project
+# Lighting up my World
 
-## Title:
-
-Lighting up my World by Michael Carlstrom rmc170, INSERT NAMEs here
+by Michael Carlstrom (rmc170), Wang Yang (wxy320), Chenxing Liu (cxl1697)
 
 ## Project Overview:
 
