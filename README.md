@@ -70,7 +70,7 @@ The histogram-based methods offer a straightforward and intuitive way to enhance
   
   Multi-scale Retinex (MSR) extends SSR by applying multiple low-pass Gaussian filters with different standard deviation, and combining the results through a weighted average:
   
-  $$\ln{r(x,y)}=\sum_{k=1}^{n}w_k[\ln{f(x,y)}-\ln{i(x,y)}=\ln{f(x,y)}-\ln{f(x,y)\ast G(x,y,\sigma_k)}],$$
+  $$\ln{r(x,y)}=\sum_{k=1}^{n}w_k[\ln{f(x,y)}-\ln{i(x,y)}=\ln{f(x,y)}-\ln{f(x,y)\ast G(x,y,\sigma_k)}]$$
 
   where $G(x,y,\sigma_k)$ represents low-pass Gaussian kernel with different standard deviation $\sigma_k$.
 
