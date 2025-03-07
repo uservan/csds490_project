@@ -70,7 +70,7 @@ The histogram-based methods offer a straightforward and intuitive way to enhance
   
   Multi-scale Retinex (MSR) extends SSR by applying multiple low-pass Gaussian filters with different standard deviation, and combining the results through a weighted average:
   
-  $$\ln{r(x,y)}=\sum_{k=1}^{n}w_k[\ln{f(x,y)}-\ln{i(x,y)}=\ln{f(x,y)}-\ln{f(x,y)\ast G(x,y,\sigma_k)}]$$
+  $$\ln{r(x,y)}=\sum_{k=1}^{n}w_k[\ln{f(x,y)}-\ln{f(x,y)\ast G(x,y,\sigma_k)}]$$
 
   where $G(x,y,\sigma_k)$ represents low-pass Gaussian kernel with different standard deviation $\sigma_k$.
 
@@ -78,7 +78,7 @@ The histogram-based methods offer a straightforward and intuitive way to enhance
   
   LIME enhanced low-light images by directly estimating the illumination map. It approximates the illumination component by taking the maximum value across the RGB channels
   
-  $$ r(x,y)=max_{c\in\lbrace R,G,B \rbrace}f_c(x,y) $$
+  $$r(x,y)=max_{c\in\lbrace R,G,B \rbrace}f_c(x,y)$$
 
   To ensure spatial smoothness, additional constraints are applied to refine the illumination map. Finally, the estimated illumination is removed from the original image, yielding the enhanced image with improved visibility and contrast.
 
@@ -91,7 +91,7 @@ Low-light images can also be enhanced using dehazing-based methods. The key idea
 
 2. Apply a dehazing algorithm to enhance visibility by removing haze-like effects.
 
-3. Invert the dehazed image again to obtain the final enhanced low-light image
+3. Invert the dehazed image back to obtain the final enhanced low-light image
 
 ### 4.2 GAN-based Method
 
@@ -102,6 +102,7 @@ Low-light images can also be enhanced using dehazing-based methods. The key idea
 * **A global-local discriminator structure** for improved feature representation.
 * **A self-regularized perceptual loss function** to guide natural-looking enhancement.
 * **An attention mechanism** to better capture important details.
+  
 EnlightenGAN is demonstrated to be easily adaptable to enhancing real-world images from various domains. And we will implement and evaluate this method in our project.
 
 ## 5 Tools and Technologies:
