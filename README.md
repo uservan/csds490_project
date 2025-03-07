@@ -78,7 +78,7 @@ The histogram-based methods offer a straightforward and intuitive way to enhance
   
   LIME enhanced low-light images by directly estimating the illumination map. It approximates the illumination component by taking the maximum value across the RGB channels
   
-  $$ r(x,y)=max_{c\in\lbrace R,G,B \rbrace}f_c(x,y). $$
+  $$ r(x,y)=max_{c\in\lbrace R,G,B \rbrace}f_c(x,y) $$
 
   To ensure spatial smoothness, additional constraints are applied to refine the illumination map. Finally, the estimated illumination is removed from the original image, yielding the enhanced image with improved visibility and contrast.
 
