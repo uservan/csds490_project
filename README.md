@@ -168,7 +168,7 @@ For no-reference evaluation, we use statistical and perceptual quality metrics.
 
 - **Natural Image Quality Evaluator (NIQE):** Computes statistical deviations from a pristine image distribution.
   
-  $$ NIQE = distence(\mu_{p}, \sigma_{p}, \mu_{d}, \sigma_{d}) $$
+  $$ NIQE = deviation(\mu_{p}, \sigma_{p}, \mu_{d}, \sigma_{d}) $$
   
   where \( p \) and \( d \) represent pristine and distorted image distributions.
 
