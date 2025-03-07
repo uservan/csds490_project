@@ -132,15 +132,21 @@ For datasets that provide paired low-light and reference images, we can directly
 For datasets with ground truth, we use full-reference IQA metrics to measure the similarity between enhanced and reference images.
 
 - **Mean Squared Error (MSE):** Measures pixel-wise difference between two images.
+  
   $$ MSE = \frac{1}{mn} \sum_{i=1}^{m} \sum_{j=1}^{n} (I(i,j) - R(i,j))^2 $$
+  
   where \( I \) is the enhanced image and \( R \) is the reference image.
 
 - **Peak Signal-to-Noise Ratio (PSNR):** Evaluates image fidelity by comparing the maximum pixel intensity to MSE.
+  
   $$ PSNR = 10 \cdot \log_{10} \left( \frac{MAX_I^2}{MSE} \right) $$
+  
   Higher values indicate better quality.
 
 - **Structural Similarity Index (SSIM):** Measures perceived structural similarity between images.
+  
   $$ SSIM(x, y) = \frac{(2\mu_x \mu_y + C_1)(2\sigma_{xy} + C_2)}{(\mu_x^2 + \mu_y^2 + C_1)(\sigma_x^2 + \sigma_y^2 + C_2)} $$
+  
   where \( \mu \) is the mean, \( \sigma \) is the variance, and \( \sigma_{xy} \) is the covariance.
 
 ### 6.2 **Images without Ground Truth**
@@ -161,7 +167,9 @@ For datasets where ground truth is unavailable, no-reference IQA metrics are use
 For no-reference evaluation, we use statistical and perceptual quality metrics.
 
 - **Natural Image Quality Evaluator (NIQE):** Computes statistical deviations from a pristine image distribution.
+  
   $$ NIQE = d(\mu_{p}, \sigma_{p}, \mu_{d}, \sigma_{d}) $$
+  
   where \( p \) and \( d \) represent pristine and distorted image distributions.
 
 - **Blind/Referenceless Image Spatial Quality Evaluator (BRISQUE):** Extracts statistical features to predict perceived quality.
