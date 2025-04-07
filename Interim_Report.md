@@ -1,16 +1,28 @@
 # Finished
 
 ## 1 Traditional Methods
-### 1.1 Histogram Equalization (HE)
-### 1.2 Adaptive Histogram Equalization (AHE)
-### 1.3 Contrast Limited Adaptive Histogram Equalization (CLAHE)
-### 1.4 Ablation Study
 
-## Dehazing-based Low-Light Image Enhancement
+In our proposal, we plan to implement traditional methods for image enhancement in low-light conditions as a baseline for comparison with other advanced approaches. Specifically, we aim to implement methods based on histogram equalization and Retinex theory. So far, we have completed the **histogram equalization** part. Experiments have been conducted on the dataset, and ablation studies have been carried out to investigate the impact of different factors on image enhancement performance.
+
+### Results and Visualization
+
+- **Histogram Equalization (HE)**
+
+
+- **Adaptive Histogram Equalization (AHE)**
+
+
+- **Contrast Limited Adaptive Histogram Equalization (CLAHE)**
+
+
+
+### Ablation Study
+
+## 2 Dehazing-based Low-Light Image Enhancement
 
 Inspired by the observation that the inverted form of a low-light image resembles a hazy image, we implemented a dehazing-based method to enhance low-light images. This approach is motivated by the paper *"Fast Efficient Algorithm for Enhancement of Low Light Video"* and leverages the classic Dark Channel Prior (DCP) dehazing technique.
 
-## Results and Visualization
+### Results and Visualization
 
 We compare three versions of the image:
 
