@@ -14,7 +14,7 @@ In our proposal, we plan to implement traditional methods for image enhancement 
 
   We have tested the performance of HE on the dataset. Some of the results are presented below,
 
-  ![fig1](https://github.com/uservan/csds490_project/blob/master/images/traditional%20methods/figure1.png)
+  ![fig1](images/traditional_methods/figure1.png)
 
   In the figure, the left and the last columns represent the input low-light image and the corresponding ground truth bright image. The second and third columns show the results of HE applied under RGB and HSV model respectively. It can be seen that HE demonstrates satisfying performance under both the color models. However, it tends to over-amplify noise and, in some cases, also exhibits an **overexposed appearance** which is more obvious under the RGB model.
 
@@ -22,7 +22,7 @@ In our proposal, we plan to implement traditional methods for image enhancement 
 
   AHE applies HE to local areas instead of the entire image. In our implementation, we use the original version of AHE, in which HE is applied to the local neighborhood of each pixel, and the result at the center pixel is taken as the output. The neighborhood size is set to 64. Some of the results are presented below,
 
-  ![fig2](https://github.com/uservan/csds490_project/blob/master/images/traditional%20methods/figure2.png)
+  ![fig2](images/traditional_methods/figure2.png)
 
   It can be observed that AHE does not perform as well as HE on the two example images. Since histogram equalization is performed within a limited neighborhood, visible artifacts are introduced, and noise is significantly amplified. As a result, AHE is **sensitive to noise**. Moreover, the **computational cost** of AHE is considerably higher, as it requires computing a separate histogram for the neighborhood of each individual pixel.
 
@@ -30,7 +30,7 @@ In our proposal, we plan to implement traditional methods for image enhancement 
 
   CLAHE improves AHE by introducing a contrast limit and bilinear interpolation. In our implementation, we set the contrast limit to 3, as a value between 2 and 5 is commonly recommended. Some of the results are presented below,
 
-  ![fig3](https://github.com/uservan/csds490_project/blob/master/images/traditional%20methods/figure5.png)
+  ![fig3](images/traditional_methods/figure5.png)
 
   It can be observed that CLAHE demonstrates satisfying performance. Compared to AHE, the introduction of a contrast limit effectively **suppresses noise amplification**, while the use of bilinear interpolation **enhances spatial consistency** in the image. Compared to HE, CLAHE does not suffer from the problem of overexposure.
   
@@ -40,7 +40,7 @@ In our proposal, we plan to implement traditional methods for image enhancement 
 
   CLAHE divides the image into multiple non-overlapping sub-regions (tiles) and applies histogram equalization independently to each region. In this method, **bilinear interpolation** plays a crucial role as it can enhance the smooth transition between tiles and thus improve spatial consistency. In this part, we investigate the effect of interpolation in CLAHE by conducting experiments with or without bilinear interpolation. The results are shown in the figures below.
 
- ![fig4](https://github.com/uservan/csds490_project/blob/master/images/traditional%20methods/figure4.png)
+ ![fig4](images/traditional_methods/figure4.png)
 
  It can be observed that without interpolation, the images in the first row exhibit a blocky, “mosaic-like” appearance, where each block corresponds to a tile used in CLAHE. With interpolation is enabled, the spatial consistency of the image is significantly improved, resulting in a more visually coherent and unified output.
 
