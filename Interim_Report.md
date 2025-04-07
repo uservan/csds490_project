@@ -77,5 +77,5 @@ As shown above, our method significantly improves the brightness and visibility 
 
 # Next Stage
 ## Evaluation Methods
-- One Next Stage is to finish the evaluation pipiline and evaluate all the methods
+- One Next Stage is to finish the evaluation pipeline and evaluate all the methods
 - Complete the implementation of Retinex theory-based methods, including both the Single-Scale Retinex (SSR) and Multi-Scale Retinex (MSR) algorithms, as well as the LIME (Low-Light Image Enhancement) algorithm.
