@@ -33,7 +33,7 @@ def get_transmission(img, A, omega=0.95, size=15):
     """
     norm_img = img / A
     transmission = 1 - omega * get_dark_channel(norm_img, size)
-    return np.clip(transmission, 0.4, 0.9)  # Safe range
+    return np.clip(transmission, 0.2, 0.9)  # Safe range
 
 def recover_image(img, t, A):
     """
@@ -63,9 +63,10 @@ def enhance_low_light_image(img):
     enhanced = invert_image(dehazed)
     return enhanced
 
-# Example usage
-if __name__ == "__main__":
-    input_path = 'data/lol_dataset/test15/low/22.png'  # Replace with your image path
+def dehaze_and_enhance(input_path):
+    """
+    Dehaze and enhance the image.
+    """
     image = cv2.imread(input_path)
 
     if image is None:
@@ -79,9 +80,16 @@ if __name__ == "__main__":
             image = np.clip(image, 0, 255).astype(np.uint8)
 
     result = enhance_low_light_image(image)
+    return result
+# Example usage
+if __name__ == "__main__":
+    
+    input_path = 'data/lol_dataset/test15/low/22.png'  # Replace with your image path
+    image = cv2.imread(input_path)
+    result = dehaze_and_enhance(input_path)
 
     # Save and display result
-    # cv2.imwrite("enhanced.jpg", result)
+    cv2.imwrite("enhanced.jpg", result)
     cv2.imshow("Original", image)
     cv2.imshow("Enhanced", result)
     cv2.waitKey(0)
