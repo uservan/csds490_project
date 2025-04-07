@@ -33,7 +33,7 @@ def get_transmission(img, A, omega=0.95, size=15):
     """
     norm_img = img / A
     transmission = 1 - omega * get_dark_channel(norm_img, size)
-    return np.clip(transmission, 0.2, 0.9)  # Safe range
+    return np.clip(transmission, 0.15, 0.9)  # Safe range
 
 def recover_image(img, t, A):
     """
