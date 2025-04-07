@@ -32,13 +32,13 @@ In our proposal, we plan to implement traditional methods for image enhancement 
 
   ![fig3](https://github.com/uservan/csds490_project/blob/master/images/traditional%20methods/figure5.png)
 
-  It can be observed that CLAHE demonstrates satisfying performance. Compared to AHE, the introduction of a contrast limit effectively **suppresses noise amplification**, while the use of bilinear interpolation enhances spatial consistency in the image. Compared to HE, CLAHE does not suffer from the problem of overexposure.
+  It can be observed that CLAHE demonstrates satisfying performance. Compared to AHE, the introduction of a contrast limit effectively **suppresses noise amplification**, while the use of bilinear interpolation **enhances spatial consistency** in the image. Compared to HE, CLAHE does not suffer from the problem of overexposure.
   
-  Furthermore, there is no significant difference in performance between applying CLAHE under the RGB and HSV color models, which demonstrates the robustness of this method. However, it is worth noting that the use of a contrast limit can cause the output images to appear slightly darker. Setting contrast limit to a higher value can mitigate this effect, but it may, in turn, amply noise, which highlights a **trade-off between brightness and noise control**.
+  Furthermore, there is no significant difference in performance between applying CLAHE under the RGB and HSV color models, which demonstrates the robustness of this method. However, it is worth noting that the use of a contrast limit can cause the output images to appear slightly darker. Setting contrast limit to a higher value can mitigate this effect, but it may, in turn, amplify the noise, which highlights a **trade-off between brightness and noise control**.
 
 ### Ablation Study
 
-  CLAHE divides the image into multiple non-overlapping sub-regions (tiles) and applies histogram equalization independently to each region. In this method, **bilinear interpolation** plays a crucial role as it can enhance the smooth transition between tiles and thus improve spatial consistency. In this part, we investigate the effect of interpolation in CLAHE by conducting experiments with or without bilinear. The results are shown in the figures below.
+  CLAHE divides the image into multiple non-overlapping sub-regions (tiles) and applies histogram equalization independently to each region. In this method, **bilinear interpolation** plays a crucial role as it can enhance the smooth transition between tiles and thus improve spatial consistency. In this part, we investigate the effect of interpolation in CLAHE by conducting experiments with or without bilinear interpolation. The results are shown in the figures below.
 
  ![fig4](https://github.com/uservan/csds490_project/blob/master/images/traditional%20methods/figure4.png)
 
