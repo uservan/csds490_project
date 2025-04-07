@@ -76,7 +76,7 @@ As shown above, our method significantly improves the brightness and visibility 
 
 ### 3 GAN Based Approach
 
-As describe in the proposal we implemented a GAN Based approach. It is currently trained for the LOL dataset. for next steps we will train it for the VE-LOL dataset as well as do some hyper-parameter training for improved performance for the LOL dataset.
+As described in the proposal we implemented a GAN Based approach. It is currently trained for the LOL dataset. for next steps we will train it for the VE-LOL dataset as well as do some hyper-parameter training for improved performance for the LOL dataset.
 
 # Next Stage
 ## Evaluation Methods
