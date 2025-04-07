@@ -7,14 +7,13 @@ import piq  # pip install piq
 from skimage import img_as_float
 import os
 
+
 def load_image_tensor(image_path):
     """Load image and convert to 4D tensor (1, 3, H, W) for PIQ."""
-    img = Image.open(image_path).convert('RGB')
-    transform = T.Compose([
-        T.Resize((224, 224)),
-        T.ToTensor()
-    ])
+    img = Image.open(image_path).convert("RGB")
+    transform = T.Compose([T.Resize((224, 224)), T.ToTensor()])
     return transform(img).unsqueeze(0)  # Shape: (1, 3, 224, 224)
+
 
 def compute_no_ref_metrics(image_path):
     """
@@ -27,15 +26,17 @@ def compute_no_ref_metrics(image_path):
     brisque_score = piq.brisque(img_tensor)
 
     return {
-        'NIQE': niqe_score.item(),
-        'PIQE': piqe_score.item(),
-        'BRISQUE': brisque_score.item()
+        "NIQE": niqe_score.item(),
+        "PIQE": piqe_score.item(),
+        "BRISQUE": brisque_score.item(),
     }
+
 
 def compute_cei(original_path, enhanced_path):
     """
     Compute Contrast Enhancement Index (CEI).
     """
+
     def contrast(image):
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         return np.std(gray)
@@ -48,6 +49,7 @@ def compute_cei(original_path, enhanced_path):
 
     return c_enh / (c_orig + 1e-8)  # avoid divide by zero
 
+
 def evaluate_image(enhanced_path, original_path=None):
     """
     Compute all no-reference IQA metrics, and optionally CEI if original provided.
@@ -56,13 +58,14 @@ def evaluate_image(enhanced_path, original_path=None):
 
     if original_path:
         cei_val = compute_cei(original_path, enhanced_path)
-        result['CEI'] = cei_val
+        result["CEI"] = cei_val
 
     return result
 
-if __name__ == '__main__':
-    enhanced = 'enhanced_dark.png'
-    original = 'original_dark.png'  # optional, can be None
+
+if __name__ == "__main__":
+    enhanced = "enhanced_dark.png"
+    original = "original_dark.png"  # optional, can be None
 
     scores = evaluate_image(enhanced, original_path=original)
 

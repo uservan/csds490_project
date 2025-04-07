@@ -1,9 +1,11 @@
 import cv2
 import numpy as np
 
+
 def invert_image(img):
     """Invert an image (simulate hazy image)"""
     return 255 - img
+
 
 def get_dark_channel(img, size=15):
     """
@@ -14,6 +16,7 @@ def get_dark_channel(img, size=15):
     kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (size, size))
     dark = cv2.erode(min_channel, kernel)
     return dark
+
 
 def get_atmosphere(img, dark_channel, top_percent=0.001):
     """
@@ -27,6 +30,7 @@ def get_atmosphere(img, dark_channel, top_percent=0.001):
     A = np.mean(brightest, axis=0)
     return A
 
+
 def get_transmission(img, A, omega=0.95, size=15):
     """
     Estimate the transmission map using the dark channel.
@@ -35,6 +39,7 @@ def get_transmission(img, A, omega=0.95, size=15):
     transmission = 1 - omega * get_dark_channel(norm_img, size)
     return np.clip(transmission, 0.15, 0.9)  # Safe range
 
+
 def recover_image(img, t, A):
     """
     Recover the dehazed image using the estimated transmission and atmospheric light.
@@ -42,6 +47,7 @@ def recover_image(img, t, A):
     t = t[..., np.newaxis]  # Make shape (H, W, 1) for broadcasting
     J = (img - A) / t + A
     return np.clip(J, 0, 1)
+
 
 def dehaze(img):
     """
@@ -54,6 +60,7 @@ def dehaze(img):
     J = recover_image(img, t, A)
     return (J * 255).astype(np.uint8)
 
+
 def enhance_low_light_image(img):
     """
     Enhance a low-light image using the dehazing-based method.
@@ -62,6 +69,7 @@ def enhance_low_light_image(img):
     dehazed = dehaze(inverted)
     enhanced = invert_image(dehazed)
     return enhanced
+
 
 def dehaze_and_enhance(input_path):
     """
@@ -81,10 +89,11 @@ def dehaze_and_enhance(input_path):
 
     result = enhance_low_light_image(image)
     return result
+
+
 # Example usage
 if __name__ == "__main__":
-    
-    input_path = 'data/lol_dataset/test15/low/22.png'  # Replace with your image path
+    input_path = "data/lol_dataset/test15/low/22.png"  # Replace with your image path
     image = cv2.imread(input_path)
     result = dehaze_and_enhance(input_path)
 
