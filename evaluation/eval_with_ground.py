@@ -1,5 +1,6 @@
 import numpy as np
 import cv2
+from PIL import Image
 from skimage.metrics import structural_similarity as ssim
 
 
@@ -24,23 +25,19 @@ def compute_ssim(img1, img2):
     Automatically converts RGB images to grayscale before comparison.
     """
     if img1.ndim == 3 and img1.shape[2] == 3:
-        img1 = cv2.cvtColor(img1.astype(np.uint8), cv2.COLOR_BGR2GRAY)
-        img2 = cv2.cvtColor(img2.astype(np.uint8), cv2.COLOR_BGR2GRAY)
+        img1 = cv2.cvtColor(img1.astype(np.uint8), cv2.COLOR_RGB2GRAY)
+        img2 = cv2.cvtColor(img2.astype(np.uint8), cv2.COLOR_RGB2GRAY)
     ssim_value, _ = ssim(img1, img2, full=True)
     return ssim_value
 
 
-def evaluate_image_pair(enhanced_path, reference_path):
+def evaluate_image_pair_from_pil(enhanced_img, reference_img):
     """
-    Evaluate a single pair of images using MSE, PSNR, and SSIM.
+    Evaluate a pair of PIL Images using MSE, PSNR, and SSIM.
     """
-    # Load images
-    enhanced = cv2.imread(enhanced_path)
-    reference = cv2.imread(reference_path)
-
-    # Convert to float32
-    enhanced = enhanced.astype(np.float32)
-    reference = reference.astype(np.float32)
+    # Convert PIL images to NumPy arrays (RGB)
+    enhanced = np.array(enhanced_img.convert("RGB"), dtype=np.float32)
+    reference = np.array(reference_img.convert("RGB"), dtype=np.float32)
 
     # Compute metrics
     mse_val = compute_mse(enhanced, reference)
@@ -50,8 +47,12 @@ def evaluate_image_pair(enhanced_path, reference_path):
     return {"MSE": mse_val, "PSNR": psnr_val, "SSIM": ssim_val}
 
 
+# Example usage
 if __name__ == "__main__":
-    result = evaluate_image_pair("enhanced.png", "reference.png")
+    enhanced = Image.open("enhanced.png")
+    reference = Image.open("reference.png")
+
+    results = evaluate_image_pair_from_pil(enhanced, reference)
     print("Evaluation Results:")
-    for metric, value in result.items():
+    for metric, value in results.items():
         print(f"{metric}: {value:.4f}")

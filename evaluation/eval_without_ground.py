@@ -1,74 +1,49 @@
-import torch
-import torchvision.transforms as T
-from PIL import Image
-import cv2
 import numpy as np
-import piq  # pip install piq
-from skimage import img_as_float
-import os
+import cv2
+from PIL import Image
 
 
-def load_image_tensor(image_path):
-    """Load image and convert to 4D tensor (1, 3, H, W) for PIQ."""
-    img = Image.open(image_path).convert("RGB")
-    transform = T.Compose([T.Resize((224, 224)), T.ToTensor()])
-    return transform(img).unsqueeze(0)  # Shape: (1, 3, 224, 224)
+def compute_simple_quality(pil_img):
+    img = np.array(pil_img.convert("RGB"))
+    gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+
+    laplacian_var = cv2.Laplacian(gray, cv2.CV_64F).var()  
+    std_dev = np.std(gray)  
+
+    score = 100 - (0.7 * laplacian_var + 0.3 * std_dev)
+
+    return max(score, 0)
 
 
-def compute_no_ref_metrics(image_path):
-    """
-    Compute NIQE, BRISQUE, PIQE using PIQ.
-    """
-    img_tensor = load_image_tensor(image_path)
-
-    niqe_score = piq.niqe(img_tensor)
-    piqe_score = piq.piqe(img_tensor)
-    brisque_score = piq.brisque(img_tensor)
-
-    return {
-        "NIQE": niqe_score.item(),
-        "PIQE": piqe_score.item(),
-        "BRISQUE": brisque_score.item(),
-    }
-
-
-def compute_cei(original_path, enhanced_path):
-    """
-    Compute Contrast Enhancement Index (CEI).
-    """
-
-    def contrast(image):
-        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+def compute_cei(original_img, enhanced_img):
+    def contrast(image_np):
+        gray = cv2.cvtColor(image_np, cv2.COLOR_RGB2GRAY)
         return np.std(gray)
 
-    img_orig = cv2.imread(original_path)
-    img_enh = cv2.imread(enhanced_path)
+    img_orig_np = np.array(original_img.convert("RGB"))
+    img_enh_np = np.array(enhanced_img.convert("RGB"))
 
-    c_orig = contrast(img_orig)
-    c_enh = contrast(img_enh)
+    c_orig = contrast(img_orig_np)
+    c_enh = contrast(img_enh_np)
 
-    return c_enh / (c_orig + 1e-8)  # avoid divide by zero
+    return c_enh / (c_orig + 1e-8)
 
 
-def evaluate_image(enhanced_path, original_path=None):
-    """
-    Compute all no-reference IQA metrics, and optionally CEI if original provided.
-    """
-    result = compute_no_ref_metrics(enhanced_path)
+def evaluate_image(enhanced_img, original_img=None):
+    result = {}
+    result["SIMPLE_SCORE"] = compute_simple_quality(enhanced_img)
 
-    if original_path:
-        cei_val = compute_cei(original_path, enhanced_path)
-        result["CEI"] = cei_val
+    if original_img:
+        result["CEI"] = compute_cei(original_img, enhanced_img)
 
     return result
 
-
 if __name__ == "__main__":
-    enhanced = "enhanced_dark.png"
-    original = "original_dark.png"  # optional, can be None
+    enhanced_img = Image.open("enhanced_dark.png")
+    original_img = Image.open("original_dark.png")
 
-    scores = evaluate_image(enhanced, original_path=original)
+    scores = evaluate_image(enhanced_img, original_img)
 
-    print("No-Reference IQA Results:")
+    print("Evaluation Results:")
     for k, v in scores.items():
         print(f"{k}: {v:.4f}")

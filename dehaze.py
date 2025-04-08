@@ -71,15 +71,10 @@ def enhance_low_light_image(img):
     return enhanced
 
 
-def dehaze_and_enhance(input_path):
+def dehaze_and_enhance(image):
     """
     Dehaze and enhance the image.
     """
-    image = cv2.imread(input_path)
-
-    if image is None:
-        raise ValueError("Image not found. Check the path.")
-
     # Ensure image is in uint8 and in [0, 255]
     if image.dtype != np.uint8:
         if image.max() <= 1.0:
@@ -95,7 +90,7 @@ def dehaze_and_enhance(input_path):
 if __name__ == "__main__":
     input_path = "data/lol_dataset/test15/low/22.png"  # Replace with your image path
     image = cv2.imread(input_path)
-    result = dehaze_and_enhance(input_path)
+    result = dehaze_and_enhance(image)
 
     # Save and display result
     cv2.imwrite("enhanced.jpg", result)
