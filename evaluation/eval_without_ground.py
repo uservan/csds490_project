@@ -7,8 +7,8 @@ def compute_simple_quality(pil_img):
     img = np.array(pil_img.convert("RGB"))
     gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
 
-    laplacian_var = cv2.Laplacian(gray, cv2.CV_64F).var()  
-    std_dev = np.std(gray)  
+    laplacian_var = cv2.Laplacian(gray, cv2.CV_64F).var()
+    std_dev = np.std(gray)
 
     score = 100 - (0.7 * laplacian_var + 0.3 * std_dev)
 
@@ -37,6 +37,7 @@ def evaluate_image(enhanced_img, original_img=None):
         result["CEI"] = compute_cei(original_img, enhanced_img)
 
     return result
+
 
 if __name__ == "__main__":
     enhanced_img = Image.open("enhanced_dark.png")

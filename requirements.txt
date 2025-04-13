@@ -3,3 +3,4 @@ torchvision
 opencv-python
 pig
 scikit-image
+datasets

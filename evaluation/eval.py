@@ -10,15 +10,16 @@ from dehaze import dehaze_and_enhance
 from PIL import Image
 import re
 
+
 def load_data():
     dataset = load_dataset("VanWang/low_datasets")
     pair_dict = defaultdict(lambda: defaultdict(dict))
 
-    for sample in tqdm(dataset["train"]):  
+    for sample in tqdm(dataset["train"]):
         source = sample["source"]
         label = sample["label"]
         # 只取 name 中的数字
-        name = re.findall(r'\d+', sample["name"])
+        name = re.findall(r"\d+", sample["name"])
         name = name[0] if name else sample["name"]  # 若没有数字，保留原始 name
 
         pair_dict[source][name][label] = sample["image"]
@@ -28,20 +29,25 @@ def load_data():
     for source, name_dict in pair_dict.items():
         for name, img_dict in name_dict.items():
             if "low" in img_dict and "high" in img_dict:
-                paired_samples[source].append({
-                    "source": source,
-                    "name": name,
-                    "low_image": img_dict["low"],
-                    "high_image": img_dict["high"]
-                })
+                paired_samples[source].append(
+                    {
+                        "source": source,
+                        "name": name,
+                        "low_image": img_dict["low"],
+                        "high_image": img_dict["high"],
+                    }
+                )
             else:
-                paired_samples[source].append({
-                    "source": source,
-                    "name": name,
-                    "low_image": img_dict.get("low"),
-                })
+                paired_samples[source].append(
+                    {
+                        "source": source,
+                        "name": name,
+                        "low_image": img_dict.get("low"),
+                    }
+                )
 
     return paired_samples
+
 
 # Convert PIL Image to OpenCV format
 # PIL → OpenCV (RGB → BGR)
@@ -49,10 +55,12 @@ def pil_to_cv2(pil_image):
     rgb = pil_image.convert("RGB")
     return cv2.cvtColor(np.array(rgb), cv2.COLOR_RGB2BGR)
 
+
 # OpenCV → PIL (BGR → RGB)
 def cv2_to_pil(cv_img):
     rgb_img = cv2.cvtColor(cv_img, cv2.COLOR_BGR2RGB)
     return Image.fromarray(rgb_img)
+
 
 def eval(method=dehaze_and_enhance):
     """
@@ -78,6 +86,6 @@ def eval(method=dehaze_and_enhance):
             else:
                 scores = evaluate_image(reference_img, low_image)
             for key, s in scores.items():
-                    results[key].append(s)
+                results[key].append(s)
         all_results[dataset] = results
     return all_results
