@@ -223,7 +223,7 @@ def testing(data_set_subdir: str | Path) -> None:
             ],
             nrow=3,
         )
-        save_image(grid, Path('outputs') / data_set_subdir / f"comparison_{i:03d}.png")
+        save_image(grid, Path("outputs") / data_set_subdir / f"comparison_{i:03d}.png")
 
 
 def main() -> None:
