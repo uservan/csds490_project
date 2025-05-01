@@ -39,3 +39,9 @@ class lolDiscriminator(nn.Module):
         x = self.conv3(x)
         x = self.sigmoid(x)
         return x
+    
+class dark_face_Generator(nn.Module):
+    pass
+
+class lolv2Generator(nn.Module):
+    pass
