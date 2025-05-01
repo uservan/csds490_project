@@ -6,3 +6,4 @@ scikit-image
 datasets
 scipy
 tqdm
+bm3d
