@@ -4,3 +4,5 @@ opencv-python
 pig
 scikit-image
 datasets
+scipy
+tqdm
