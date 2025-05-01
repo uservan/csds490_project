@@ -1,4 +1,5 @@
 import __init__
+from typing import Any, Callable
 from datasets import load_dataset
 from collections import defaultdict
 from tqdm import tqdm
@@ -6,12 +7,13 @@ from eval_with_ground import evaluate_image_pair_from_pil
 from eval_without_ground import evaluate_image
 import numpy as np
 import cv2
+from cv2.typing import MatLike
 from dehaze import dehaze_and_enhance
 from PIL import Image
 import re
 
 
-def load_data():
+def load_data() -> defaultdict[str, list[dict[str, Any]]]:
     dataset = load_dataset("VanWang/low_datasets")
     pair_dict = defaultdict(lambda: defaultdict(dict))
 
@@ -24,7 +26,7 @@ def load_data():
 
         pair_dict[source][name][label] = sample["image"]
 
-    paired_samples = defaultdict(list)
+    paired_samples: defaultdict[str, list[dict[str, Any]]] = defaultdict(list)
 
     for source, name_dict in pair_dict.items():
         for name, img_dict in name_dict.items():
@@ -51,18 +53,18 @@ def load_data():
 
 # Convert PIL Image to OpenCV format
 # PIL → OpenCV (RGB → BGR)
-def pil_to_cv2(pil_image):
+def pil_to_cv2(pil_image: Image.Image) -> MatLike:
     rgb = pil_image.convert("RGB")
     return cv2.cvtColor(np.array(rgb), cv2.COLOR_RGB2BGR)
 
 
 # OpenCV → PIL (BGR → RGB)
-def cv2_to_pil(cv_img):
+def cv2_to_pil(cv_img: MatLike) -> Image.Image:
     rgb_img = cv2.cvtColor(cv_img, cv2.COLOR_BGR2RGB)
     return Image.fromarray(rgb_img)
 
 
-def eval(method=dehaze_and_enhance):
+def eval(method: Callable[[MatLike], MatLike] = dehaze_and_enhance):
     """
     Evaluate the dehazing and enhancement method on the dataset.
     Args:

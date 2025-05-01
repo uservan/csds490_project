@@ -1,13 +1,15 @@
 import cv2
+from cv2.typing import MatLike
 import numpy as np
+from numpy.typing import NDArray
 
 
-def invert_image(img):
+def invert_image(img: MatLike) -> MatLike:
     """Invert an image (simulate hazy image)"""
     return 255 - img
 
 
-def get_dark_channel(img, size=15):
+def get_dark_channel(img: MatLike, size: int = 15) -> MatLike:
     """
     Compute the dark channel prior of the image.
     Input should be a float32 image in [0, 1].
@@ -18,7 +20,7 @@ def get_dark_channel(img, size=15):
     return dark
 
 
-def get_atmosphere(img, dark_channel, top_percent=0.001):
+def get_atmosphere(img: MatLike, dark_channel: MatLike, top_percent: float = 0.001) -> MatLike:
     """
     Estimate the atmospheric light A from the brightest pixels in the dark channel.
     """
@@ -31,7 +33,7 @@ def get_atmosphere(img, dark_channel, top_percent=0.001):
     return A
 
 
-def get_transmission(img, A, omega=0.95, size=15):
+def get_transmission(img: MatLike, A: MatLike, omega: float = 0.95, size: int = 15) -> NDArray:
     """
     Estimate the transmission map using the dark channel.
     """
@@ -40,7 +42,7 @@ def get_transmission(img, A, omega=0.95, size=15):
     return np.clip(transmission, 0.15, 0.9)  # Safe range
 
 
-def recover_image(img, t, A):
+def recover_image(img: MatLike, t: MatLike, A: MatLike) -> MatLike:
     """
     Recover the dehazed image using the estimated transmission and atmospheric light.
     """
@@ -49,7 +51,7 @@ def recover_image(img, t, A):
     return np.clip(J, 0, 1)
 
 
-def dehaze(img):
+def dehaze(img: MatLike) -> MatLike:
     """
     Main dehazing function. Input is a uint8 image, output is uint8 dehazed image.
     """
@@ -61,7 +63,7 @@ def dehaze(img):
     return (J * 255).astype(np.uint8)
 
 
-def enhance_low_light_image(img):
+def enhance_low_light_image(img: MatLike) -> MatLike:
     """
     Enhance a low-light image using the dehazing-based method.
     """
@@ -71,7 +73,7 @@ def enhance_low_light_image(img):
     return enhanced
 
 
-def dehaze_and_enhance(image):
+def dehaze_and_enhance(image: MatLike) -> MatLike:
     """
     Dehaze and enhance the image.
     """
