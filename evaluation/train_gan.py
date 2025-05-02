@@ -16,11 +16,10 @@ from common import (
     device,
 )
 
-from torch.utils.data import DataLoader
-from torchvision.utils import make_grid, save_image
-
 # Import to have import here after common Tensor be on cuda
 from custom_datasets import GroundTruthImageDataset, NoGroundTruthImageDataset
+from torch.utils.data import DataLoader
+from torchvision.utils import make_grid, save_image
 
 BATCH_SIZE = 16
 
@@ -74,11 +73,10 @@ def ground_truth_training(dataset_name: GroundTruthDataSets) -> None:
             loss_g.backward()
             optimizer_g.step()
 
-            # Print progress
-            if (i + 1) % 10 == 0:
-                print(
-                    f"Epoch [{epoch + 1}/{num_epochs}], Step [{i + 1}/{len(dataloader)}], Loss D: {loss_d.item():.4f}, Loss G: {loss_g.item():.4f}"
-                )
+        # Print progress
+        print(
+            f"Epoch [{epoch + 1}/{num_epochs}], Loss D: {loss_d.item():.4f}, Loss G: {loss_g.item():.4f}"
+        )
 
     torch.save(
         generator.state_dict(),
@@ -102,7 +100,6 @@ def ground_truth_testing(dataset_name: GroundTruthDataSets) -> None:
 
     # Testing loop
     for i, (dark_images, bright_images) in enumerate(dataloader):
-
         if i >= 20:
             break
 
@@ -119,7 +116,10 @@ def ground_truth_testing(dataset_name: GroundTruthDataSets) -> None:
             ],
             nrow=3,
         )
-        save_image(grid, Path.cwd().parent / ("outputs") / dataset_name / f"comparison_{i:03d}.png")
+        save_image(
+            grid,
+            Path.cwd().parent / ("outputs") / dataset_name / f"comparison_{i:03d}.png",
+        )
 
 
 def no_ground_truth_training(dataset_name: NoGroundTruthDataSets):
@@ -142,7 +142,7 @@ def main() -> None:
             dataset_name: DataSets = "lol_dataset"
             ground_truth = True
         case "lolv2":
-            dataset_name = "LOL-V2"
+            dataset_name = "LOL-v2"
             ground_truth = True
         case "dark_face":
             dataset_name = "Dark_Face"

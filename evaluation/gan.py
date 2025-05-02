@@ -1,5 +1,5 @@
 import torch
-from common import GENERATOR_MAPPING, WEIGHTS_PATH, DataSets
+from common import GENERATOR_MAPPING, GENERATOR_WEIGHTS, WEIGHTS_PATH, DataSets
 from cv2.typing import MatLike
 
 

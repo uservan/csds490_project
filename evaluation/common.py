@@ -17,7 +17,7 @@ device = torch.device("cuda:0" if (torch.cuda.is_available() and ngpu > 0) else 
 torch.set_default_device(device)
 
 
-type GroundTruthDataSets = Literal["lol_dataset", "LOL-V2"]
+type GroundTruthDataSets = Literal["lol_dataset", "LOL-v2"]
 type NoGroundTruthDataSets = Literal["Dark_Face"]
 
 type DataSets = GroundTruthDataSets | NoGroundTruthDataSets
@@ -25,13 +25,13 @@ type DataSets = GroundTruthDataSets | NoGroundTruthDataSets
 GENERATOR_MAPPING: dict[DataSets, nn.Module] = {
     "lol_dataset": lolGenerator(),
     "Dark_Face": dark_faceGenerator(),
-    "LOL-V2": lolv2Generator(),
+    "LOL-v2": lolv2Generator(),
 }
 
 DISCRIMINATOR_MAPPING: dict[DataSets, nn.Module] = {
     "lol_dataset": lolDiscriminator(),
     "Dark_Face": dark_faceDiscriminator(),
-    "LOL-V2": lolv2Discriminator(),
+    "LOL-v2": lolv2Discriminator(),
 }
 
 WEIGHTS_PATH = Path.cwd().parent / "weights"

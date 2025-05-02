@@ -1,6 +1,5 @@
-
-# import torch
 import torch.nn as nn
+
 
 class lolGenerator(nn.Module):
     def __init__(self) -> None:
@@ -16,10 +15,9 @@ class lolGenerator(nn.Module):
             nn.Sigmoid(),
         )
 
-
     def forward(self, x):
         return self.model(x)
-    
+
 
 class lolDiscriminator(nn.Module):
     def __init__(self) -> None:
@@ -39,15 +37,85 @@ class lolDiscriminator(nn.Module):
         x = self.conv3(x)
         x = self.sigmoid(x)
         return x
-    
+
+
 class dark_faceGenerator(nn.Module):
     pass
+
 
 class dark_faceDiscriminator(nn.Module):
     pass
 
+
 class lolv2Generator(nn.Module):
-    pass
+    def __init__(self, input_channels=3, output_channels=3, features=64):
+        super().__init__()
+        self.encoder = nn.Sequential(
+            self.contract_block(input_channels, features),
+            self.contract_block(features, features * 2),
+            self.contract_block(features * 2, features * 4),
+            self.contract_block(features * 4, features * 8),
+        )
+        self.decoder = nn.Sequential(
+            self.expand_block(features * 8, features * 4),
+            self.expand_block(features * 4, features * 2),
+            self.expand_block(features * 2, features),
+            nn.ConvTranspose2d(
+                features, output_channels, kernel_size=4, stride=2, padding=1
+            ),
+            nn.Tanh(),
+        )
+
+    def contract_block(
+        self, in_channels, out_channels, kernel_size=4, stride=2, padding=1
+    ):
+        return nn.Sequential(
+            nn.Conv2d(
+                in_channels, out_channels, kernel_size, stride, padding, bias=False
+            ),
+            nn.BatchNorm2d(out_channels),
+            nn.LeakyReLU(0.2, inplace=True),
+        )
+
+    def expand_block(
+        self, in_channels, out_channels, kernel_size=4, stride=2, padding=1
+    ):
+        return nn.Sequential(
+            nn.ConvTranspose2d(
+                in_channels, out_channels, kernel_size, stride, padding, bias=False
+            ),
+            nn.BatchNorm2d(out_channels),
+            nn.ReLU(inplace=True),
+        )
+
+    def forward(self, x):
+        out = self.decoder(self.encoder(x))
+        # Ensure output matches input size
+        out = nn.functional.interpolate(out, size=x.shape[2:], mode="bilinear", align_corners=False)
+        return out
+
+
 
 class lolv2Discriminator(nn.Module):
-    pass
+    def __init__(self, input_channels=3, features=64):
+        super().__init__()
+        self.model = nn.Sequential(
+            nn.Conv2d(
+                input_channels, features, kernel_size=4, stride=2, padding=1
+            ),  # no batchnorm here
+            nn.LeakyReLU(0.2, inplace=True),
+            nn.Conv2d(features, features * 2, kernel_size=4, stride=2, padding=1),
+            nn.BatchNorm2d(features * 2),
+            nn.LeakyReLU(0.2, inplace=True),
+            nn.Conv2d(features * 2, features * 4, kernel_size=4, stride=2, padding=1),
+            nn.BatchNorm2d(features * 4),
+            nn.LeakyReLU(0.2, inplace=True),
+            nn.Conv2d(features * 4, features * 8, kernel_size=4, stride=1, padding=1),
+            nn.BatchNorm2d(features * 8),
+            nn.LeakyReLU(0.2, inplace=True),
+            nn.Conv2d(features * 8, 1, kernel_size=4, stride=1, padding=1),
+            nn.Sigmoid(),  # Optional, can use BCEWithLogitsLoss instead
+        )
+
+    def forward(self, x):
+        return self.model(x)
