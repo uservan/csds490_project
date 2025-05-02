@@ -40,11 +40,57 @@ class lolDiscriminator(nn.Module):
 
 
 class dark_faceGenerator(nn.Module):
-    pass
+    def __init__(self, nc=3, ngf=64):
+        super().__init__()
+        self.encoder = nn.Sequential(
+            nn.Conv2d(nc, ngf, 4, 2, 1),  # [B, 3, H, W] -> [B, 64, H/2, W/2]
+            nn.LeakyReLU(0.2),
+            nn.Conv2d(ngf, ngf * 2, 4, 2, 1),
+            nn.BatchNorm2d(ngf * 2),
+            nn.LeakyReLU(0.2),
+            nn.Conv2d(ngf * 2, ngf * 4, 4, 2, 1),
+            nn.BatchNorm2d(ngf * 4),
+            nn.LeakyReLU(0.2),
+        )
+
+        self.decoder = nn.Sequential(
+            nn.ConvTranspose2d(ngf * 4, ngf * 2, 4, 2, 1),
+            nn.BatchNorm2d(ngf * 2),
+            nn.ReLU(),
+            nn.ConvTranspose2d(ngf * 2, ngf, 4, 2, 1),
+            nn.BatchNorm2d(ngf),
+            nn.ReLU(),
+            nn.ConvTranspose2d(ngf, nc, 4, 2, 1),
+            nn.Tanh(),
+        )
+
+    def forward(self, x):
+        x = self.encoder(x)
+        x = self.decoder(x)
+        return x
 
 
 class dark_faceDiscriminator(nn.Module):
-    pass
+    def __init__(self, ndf=64, nc=3):
+        super(dark_faceDiscriminator, self).__init__()
+        self.net = nn.Sequential(
+            nn.Conv2d(nc, ndf, 4, 2, 1, bias=False),
+            nn.LeakyReLU(0.2, inplace=True),
+            nn.Conv2d(ndf, ndf * 2, 4, 2, 1, bias=False),
+            nn.BatchNorm2d(ndf * 2),
+            nn.LeakyReLU(0.2, inplace=True),
+            nn.Conv2d(ndf * 2, ndf * 4, 4, 2, 1, bias=False),
+            nn.BatchNorm2d(ndf * 4),
+            nn.LeakyReLU(0.2, inplace=True),
+            nn.Conv2d(ndf * 4, ndf * 8, 4, 2, 1, bias=False),
+            nn.BatchNorm2d(ndf * 8),
+            nn.LeakyReLU(0.2, inplace=True),
+            nn.Conv2d(ndf * 8, 1, 4, 1, 0, bias=False),
+            nn.Sigmoid(),  # or use BCEWithLogitsLoss without sigmoid
+        )
+
+    def forward(self, x):
+        return self.net(x).view(-1, 1).squeeze(1)
 
 
 class lolv2Generator(nn.Module):
@@ -91,9 +137,10 @@ class lolv2Generator(nn.Module):
     def forward(self, x):
         out = self.decoder(self.encoder(x))
         # Ensure output matches input size
-        out = nn.functional.interpolate(out, size=x.shape[2:], mode="bilinear", align_corners=False)
+        out = nn.functional.interpolate(
+            out, size=x.shape[2:], mode="bilinear", align_corners=False
+        )
         return out
-
 
 
 class lolv2Discriminator(nn.Module):

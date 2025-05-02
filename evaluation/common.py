@@ -15,6 +15,7 @@ from models import (
 ngpu = 1
 device = torch.device("cuda:0" if (torch.cuda.is_available() and ngpu > 0) else "cpu")
 torch.set_default_device(device)
+torch.cuda.empty_cache()
 
 
 type GroundTruthDataSets = Literal["lol_dataset", "LOL-v2"]
