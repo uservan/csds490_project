@@ -14,7 +14,19 @@ def gan_method(dataset: DataSets, img: MatLike) -> MatLike:
     # Generator's expect PIL
     pil_image = cv2_to_pil(img)
     tensor = TO_TENSOR(pil_image)
-    generated_image = generator(tensor.to(device))
+
+    tensor = tensor.to(device)
+    tensor_shape = tensor.shape
+    is_three_D = len(tensor.shape) == 3
+
+    if is_three_D:
+        tensor = tensor.view(1, *tensor_shape)
+
+    generated_image = generator(tensor)
+
+    if is_three_D:
+        generated_image = generated_image.view(*tensor_shape)
+
     generated_pil = to_pil_image(generated_image)
 
     return pil_to_cv2(generated_pil)
