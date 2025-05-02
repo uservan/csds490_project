@@ -21,7 +21,7 @@ from custom_datasets import GroundTruthImageDataset, NoGroundTruthImageDataset
 from torch.utils.data import DataLoader
 from torchvision.utils import make_grid, save_image
 
-BATCH_SIZE = 16
+BATCH_SIZE = 8
 
 
 def ground_truth_training(dataset_name: GroundTruthDataSets) -> None:
@@ -37,7 +37,7 @@ def ground_truth_training(dataset_name: GroundTruthDataSets) -> None:
     optimizer_d = optim.Adam(discriminator.parameters(), lr=learning_rate)
 
     # Define loss function
-    criterion = nn.BCELoss()
+    criterion = nn.BCEWithLogitsLoss()
 
     # Create dataset and dataloader
     dataset = GroundTruthImageDataset(dataset_name)
