@@ -1,42 +1,44 @@
-from typing import Literal
-
-from cv2.typing import MatLike
-from eval import load_data, pil_to_cv2
+from common import GroundTruthDataSets, NoGroundTruthDataSets
+from eval import load_data
+from PIL.Image import Image
+from torch import Tensor
 from torch.utils.data import Dataset
+from torchvision.transforms import ToTensor
 
+TO_TENSOR = ToTensor()
 
 class NoGroundTruthImageDataset(Dataset):
     def __init__(
         self,
-        dataset_name: Literal["Dark_Face"],
+        dataset_name: NoGroundTruthDataSets,
     ):
         self.data = load_data()[dataset_name]
 
     def __len__(self) -> int:
         return len(self.data)
 
-    def __getitem__(self, idx: int) -> MatLike:
+    def __getitem__(self, idx: int) -> Tensor:
         image_pair = self.data[idx]
 
-        dark_image = pil_to_cv2(image_pair["low"])
+        dark_image: Image = image_pair["low_image"]
 
-        return dark_image
+        return TO_TENSOR(dark_image)
 
 
 class GroundTruthImageDataset(Dataset):
     def __init__(
         self,
-        dataset_name: Literal["lol_dataset", "LOL-V2"],
+        dataset_name: GroundTruthDataSets,
     ):
         self.data = load_data()[dataset_name]
 
     def __len__(self) -> int:
         return len(self.data)
 
-    def __getitem__(self, idx: int) -> tuple[MatLike, MatLike]:
+    def __getitem__(self, idx: int) -> tuple[Tensor, Tensor]:
         image_pair = self.data[idx]
 
-        dark_image = pil_to_cv2(image_pair["low"])
-        bright_image = pil_to_cv2(image_pair["high"])
+        dark_image: Image = image_pair["low_image"]
+        bright_image: Image = image_pair["high_image"]
 
-        return dark_image, bright_image
+        return TO_TENSOR(dark_image), TO_TENSOR(bright_image)

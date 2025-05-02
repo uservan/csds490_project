@@ -40,8 +40,14 @@ class lolDiscriminator(nn.Module):
         x = self.sigmoid(x)
         return x
     
-class dark_face_Generator(nn.Module):
+class dark_faceGenerator(nn.Module):
+    pass
+
+class dark_faceDiscriminator(nn.Module):
     pass
 
 class lolv2Generator(nn.Module):
+    pass
+
+class lolv2Discriminator(nn.Module):
     pass
