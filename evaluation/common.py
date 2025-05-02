@@ -23,15 +23,15 @@ type NoGroundTruthDataSets = Literal["Dark_Face"]
 type DataSets = GroundTruthDataSets | NoGroundTruthDataSets
 
 GENERATOR_MAPPING: dict[DataSets, nn.Module] = {
-    "lol_dataset": lolGenerator(),
-    "Dark_Face": dark_faceGenerator(),
-    "LOL-v2": lolv2Generator(),
+    "lol_dataset": lolGenerator().to(device),
+    "Dark_Face": dark_faceGenerator().to(device),
+    "LOL-v2": lolv2Generator().to(device),
 }
 
 DISCRIMINATOR_MAPPING: dict[DataSets, nn.Module] = {
-    "lol_dataset": lolDiscriminator(),
-    "Dark_Face": dark_faceDiscriminator(),
-    "LOL-v2": lolv2Discriminator(),
+    "lol_dataset": lolDiscriminator().to(device),
+    "Dark_Face": dark_faceDiscriminator().to(device),
+    "LOL-v2": lolv2Discriminator().to(device),
 }
 
 WEIGHTS_PATH = Path.cwd().parent / "weights"
