@@ -105,57 +105,43 @@ class lolDiscriminator(nn.Module):
 
 
 class dark_faceGenerator(nn.Module):
-    def __init__(self, nc=3, ngf=64):
-        super().__init__()
-        self.encoder = nn.Sequential(
-            nn.Conv2d(nc, ngf, 4, 2, 1),  # [B, 3, H, W] -> [B, 64, H/2, W/2]
-            nn.LeakyReLU(0.2),
-            nn.Conv2d(ngf, ngf * 2, 4, 2, 1),
-            nn.BatchNorm2d(ngf * 2),
-            nn.LeakyReLU(0.2),
-            nn.Conv2d(ngf * 2, ngf * 4, 4, 2, 1),
-            nn.BatchNorm2d(ngf * 4),
-            nn.LeakyReLU(0.2),
-        )
+    def __init__(self):
+        super(dark_faceGenerator, self).__init__()
 
-        self.decoder = nn.Sequential(
-            nn.ConvTranspose2d(ngf * 4, ngf * 2, 4, 2, 1),
-            nn.BatchNorm2d(ngf * 2),
-            nn.ReLU(),
-            nn.ConvTranspose2d(ngf * 2, ngf, 4, 2, 1),
-            nn.BatchNorm2d(ngf),
-            nn.ReLU(),
-            nn.ConvTranspose2d(ngf, nc, 4, 2, 1),
+        self.net = nn.Sequential(
+            nn.Conv2d(3, 16, kernel_size=3, padding=1),
+            nn.ReLU(inplace=True),
+            nn.Conv2d(16, 16, kernel_size=3, padding=1),
+            nn.ReLU(inplace=True),
+            nn.Conv2d(16, 3, kernel_size=3, padding=1),
             nn.Tanh(),
         )
 
     def forward(self, x):
-        x = self.encoder(x)
-        x = self.decoder(x)
-        return x
+        return self.net(x)
 
 
 class dark_faceDiscriminator(nn.Module):
-    def __init__(self, ndf=64, nc=3):
+    def __init__(self):
         super(dark_faceDiscriminator, self).__init__()
-        self.net = nn.Sequential(
-            nn.Conv2d(nc, ndf, 4, 2, 1, bias=False),
-            nn.LeakyReLU(0.2, inplace=True),
-            nn.Conv2d(ndf, ndf * 2, 4, 2, 1, bias=False),
-            nn.BatchNorm2d(ndf * 2),
-            nn.LeakyReLU(0.2, inplace=True),
-            nn.Conv2d(ndf * 2, ndf * 4, 4, 2, 1, bias=False),
-            nn.BatchNorm2d(ndf * 4),
-            nn.LeakyReLU(0.2, inplace=True),
-            nn.Conv2d(ndf * 4, ndf * 8, 4, 2, 1, bias=False),
-            nn.BatchNorm2d(ndf * 8),
-            nn.LeakyReLU(0.2, inplace=True),
-            nn.Conv2d(ndf * 8, 1, 4, 1, 0, bias=False),
-            nn.Sigmoid(),  # or use BCEWithLogitsLoss without sigmoid
+
+        def block(in_c, out_c, k=4, s=2, p=1):
+            return nn.Sequential(
+                nn.Conv2d(in_c, out_c, kernel_size=k, stride=s, padding=p),
+                nn.BatchNorm2d(out_c),
+                nn.LeakyReLU(0.2, inplace=True),
+            )
+
+        self.model = nn.Sequential(
+            block(3, 32),
+            block(32, 64),
+            block(64, 128),
+            nn.Conv2d(128, 1, kernel_size=4, stride=1, padding=1),  # PatchGAN output
+            nn.Sigmoid(),
         )
 
     def forward(self, x):
-        return self.net(x).view(-1, 1).squeeze(1)
+        return self.model(x)
 
 
 class UNetBlock(nn.Module):
