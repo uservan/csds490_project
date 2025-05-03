@@ -19,8 +19,13 @@ def load_data() -> defaultdict[str, list[dict[str, Any]]]:
     dataset = load_dataset("VanWang/low_datasets")
     pair_dict = defaultdict(lambda: defaultdict(dict))
 
+    Dark_face_num = 0
     for sample in tqdm(dataset["train"]):
         source = sample["source"]
+        if source == "Dark_Face":
+            if Dark_face_num > 500:
+                continue
+            Dark_face_num += 1
         label = sample["label"]
         # 只取 name 中的数字
         name = re.findall(r"\d+", sample["name"])

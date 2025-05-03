@@ -4,15 +4,24 @@ from PIL import Image
 
 
 def compute_simple_quality(pil_img):
+    # 1. 转灰度图
     img = np.array(pil_img.convert("RGB"))
     gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
 
-    laplacian_var = cv2.Laplacian(gray, cv2.CV_64F).var()
+    # 2. 清晰度：Laplacian 方差
+    lap_var = cv2.Laplacian(gray, cv2.CV_64F).var()
+
+    # 3. 对比度：标准差
     std_dev = np.std(gray)
 
-    score = 100 - (0.7 * laplacian_var + 0.3 * std_dev)
+    # 4. 归一化（假设清晰度最大 1000，对比度最大 128，都归一化到 [0, 1]）
+    norm_lap = min(lap_var / 1000.0, 1.0)
+    norm_std = min(std_dev / 128.0, 1.0)
 
-    return max(score, 0)
+    # 5. 加权得分（清晰度权重更大）
+    score = (0.7 * norm_lap + 0.3 * norm_std) * 100
+
+    return round(score, 2)
 
 
 def compute_cei(original_img, enhanced_img):
