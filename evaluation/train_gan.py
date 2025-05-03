@@ -120,7 +120,7 @@ def ground_truth_testing(dataset_name: GroundTruthDataSets) -> None:
         )
         save_image(
             grid,
-            Path.cwd().parent / ("outputs") / dataset_name / f"comparison_{i:03d}.png",
+            Path.cwd().parent / ("gan_outputs") / dataset_name / f"comparison_{i:03d}.png",
         )
 
 
@@ -220,7 +220,7 @@ def no_ground_truth_testing(dataset_name: NoGroundTruthDataSets):
         )
         save_image(
             grid,
-            Path.cwd().parent / ("outputs") / dataset_name / f"comparison_{i:03d}.png",
+            Path.cwd().parent / ("gan_outputs") / dataset_name / f"comparison_{i:03d}.png",
         )
 
 
