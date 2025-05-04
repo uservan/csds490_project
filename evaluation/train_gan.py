@@ -90,10 +90,10 @@ def ground_truth_training(dataset_name: GroundTruthDataSets) -> None:
     )
 
 
-def ground_truth_testing(dataset_name: GroundTruthDataSets) -> None:
-    generator = GENERATOR_MAPPING[dataset_name]
+def ground_truth_testing(dataset_name: GroundTruthDataSets, algorithm_name: DataSets) -> None:
+    generator = GENERATOR_MAPPING[algorithm_name]
     generator.load_state_dict(
-        torch.load(WEIGHTS_PATH / dataset_name / GENERATOR_WEIGHTS)
+        torch.load(WEIGHTS_PATH / algorithm_name / GENERATOR_WEIGHTS)
     )
 
     # Create dataset and dataloader
@@ -120,7 +120,7 @@ def ground_truth_testing(dataset_name: GroundTruthDataSets) -> None:
         )
         save_image(
             grid,
-            Path.cwd().parent / ("gan_outputs") / dataset_name / f"comparison_{i:03d}.png",
+            Path.cwd().parent / ("gan_outputs") / f"trained_on_{algorithm_name}" / dataset_name / f"comparison_{i:03d}.png",
         )
 
 
@@ -190,12 +190,10 @@ def no_ground_truth_training(dataset_name: NoGroundTruthDataSets):
     )
 
 
-def no_ground_truth_testing(dataset_name: NoGroundTruthDataSets):
-    diff_dataset_name = "lol_dataset"
-
-    generator = GENERATOR_MAPPING[diff_dataset_name]
+def no_ground_truth_testing(dataset_name: NoGroundTruthDataSets, algorithm_name: DataSets):
+    generator = GENERATOR_MAPPING[algorithm_name]
     generator.load_state_dict(
-        torch.load(WEIGHTS_PATH / diff_dataset_name / GENERATOR_WEIGHTS)
+        torch.load(WEIGHTS_PATH / algorithm_name / GENERATOR_WEIGHTS)
     )
 
     # Create dataset and dataloader
@@ -220,7 +218,7 @@ def no_ground_truth_testing(dataset_name: NoGroundTruthDataSets):
         )
         save_image(
             grid,
-            Path.cwd().parent / ("gan_outputs") / dataset_name / f"comparison_{i:03d}.png",
+            Path.cwd().parent / ("gan_outputs") / f"trained_on_{algorithm_name}" / dataset_name / f"comparison_{i:03d}.png",
         )
 
 
@@ -253,9 +251,9 @@ def main() -> None:
             no_ground_truth_training(dataset_name)
     else:
         if ground_truth:
-            ground_truth_testing(dataset_name)
+            ground_truth_testing(dataset_name, "LOL-v2")
         else:
-            no_ground_truth_testing(dataset_name)
+            no_ground_truth_testing(dataset_name, "LOL-v2")
 
 
 if __name__ == "__main__":
