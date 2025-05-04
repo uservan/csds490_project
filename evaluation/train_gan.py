@@ -122,6 +122,10 @@ def ground_truth_testing(dataset_name: GroundTruthDataSets, algorithm_name: Data
             grid,
             Path.cwd().parent / ("gan_outputs") / f"trained_on_{algorithm_name}" / dataset_name / f"comparison_{i:03d}.png",
         )
+        save_image(
+            generated_images[0],
+            Path.cwd().parent / ("gan_outputs") / f"trained_on_{algorithm_name}" / dataset_name / f"{i:03d}.png",
+        )
 
 
 def no_ground_truth_training(dataset_name: NoGroundTruthDataSets):
@@ -217,6 +221,10 @@ def no_ground_truth_testing(dataset_name: NoGroundTruthDataSets, algorithm_name:
             nrow=2,
         )
         save_image(
+            generated_images[0],
+            Path.cwd().parent / ("gan_outputs") / f"trained_on_{algorithm_name}" / dataset_name / f"{i:03d}.png",
+        )
+        save_image(
             grid,
             Path.cwd().parent / ("gan_outputs") / f"trained_on_{algorithm_name}" / dataset_name / f"comparison_{i:03d}.png",
         )
@@ -244,6 +252,9 @@ def main() -> None:
                 f"{args.dataset} was not one of expected [lol, ve_lol_cap, ve_lol_synth]"
             )
 
+    algorithm = "lol_dataset"
+    # algorithm = "LOL-v2"
+
     if args.train:
         if ground_truth:
             ground_truth_training(dataset_name)
@@ -251,9 +262,9 @@ def main() -> None:
             no_ground_truth_training(dataset_name)
     else:
         if ground_truth:
-            ground_truth_testing(dataset_name, "LOL-v2")
+            ground_truth_testing(dataset_name, algorithm)
         else:
-            no_ground_truth_testing(dataset_name, "LOL-v2")
+            no_ground_truth_testing(dataset_name, algorithm)
 
 
 if __name__ == "__main__":
