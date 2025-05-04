@@ -90,12 +90,12 @@ def dehaze_and_enhance(image: MatLike) -> MatLike:
 
 # Example usage
 if __name__ == "__main__":
-    input_path = "data/lol_dataset/test15/low/22.png"  # Replace with your image path
+    input_path = "images/show/3975_low.png"  # Replace with your image path
     image = cv2.imread(input_path)
     result = dehaze_and_enhance(image)
 
     # Save and display result
-    cv2.imwrite("enhanced.jpg", result)
+    cv2.imwrite("3975_enhanced.jpg", result)
     cv2.imshow("Original", image)
     cv2.imshow("Enhanced", result)
     cv2.waitKey(0)
