@@ -7,7 +7,6 @@ from torchvision.transforms.functional import to_pil_image
 
 
 def gan_method(dataset: DataSets, img: MatLike) -> MatLike:
-    # TODO maybe not spin up and down generator every time?
     generator = GENERATOR_MAPPING[dataset]
     generator.load_state_dict(torch.load(WEIGHTS_PATH / dataset / GENERATOR_WEIGHTS))
 
